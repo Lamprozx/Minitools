@@ -2,40 +2,29 @@
 
 set -e
 
-spinner() {
-    local pid=$!
-    local spin='-\|/'
-    local i=0
+echo "[*] Nerd Font Installer"
 
-    tput civis 2>/dev/null || true
+mkdir -p ~/.termux
+cd ~/.termux
 
-    while kill -0 $pid 2>/dev/null; do
-        i=$(( (i+1) %4 ))
-        printf "\r[%c] %s" "${spin:$i:1}" "$1"
-        sleep 0.1
-    done
+echo "[*] Install deps..."
+pkg install -y wget unzip >/dev/null 2>&1
 
-    printf "\r[✔] %s\n" "$1"
-    tput cnorm 2>/dev/null || true  
-}
+echo "[*] Download font..."
+wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -O nf.zip
 
-run_step() {
-    (eval "$1") &
-    spinner "$2"
-}
+echo "[*] Extract target font..."
+unzip -q nf.zip 'JetBrainsMonoNLNerdFont-Regular.ttf'
 
-echo "Nerd Font Installer"
+echo "[*] Apply font..."
+mv -f JetBrainsMonoNLNerdFont-Regular.ttf font.ttf
 
-run_step "pkg install -y wget unzip >/dev/null 2>&1" "Installing dependencies"
-run_step "cd ~/.termux" "Entering config directory"
+echo "[*] Cleanup..."
+rm -f nf.zip
 
-run_step "wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -O ~/.termux/nf.zip" "Downloading font"
-run_step "cd ~/.termux && unzip -q nf.zip '*Regular.ttf'" "Extracting font"
-run_step "cd ~/.termux && mv *Regular.ttf font.ttf" "Applying font"
-
-run_step "rm -f ~/.termux/nf.zip" "Cleaning up"
-run_step "termux-reload-settings" "Reloading Termux"
+echo "[*] Reload settings..."
+termux-reload-settings 2>/dev/null || true
 
 echo
-echo "[✔] Done!"
-echo "[!] Now, Restart Your Termux! "
+echo "[✔] Done 😹"
+echo "[!] Restart Termux biar keliatan"
