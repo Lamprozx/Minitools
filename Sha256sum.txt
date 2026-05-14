@@ -1,0 +1,9 @@
+┌─[ MINITOOLS / SHA256 VERIFY ]
+│
+├── File
+│   └── /TermuxNerdFontInstaller.sh
+│
+├── SHA256
+│   └── 401cc124eb36df842654e6a41735c12082a10311b52b821d85e6b24a1ace832a
+│
+└── -
